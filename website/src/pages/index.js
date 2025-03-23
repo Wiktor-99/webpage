@@ -14,6 +14,7 @@ export default function Home() {
         justifyContent: 'center',
         minHeight: '50vh'
       }}>
+        Test
       </main>
     </Layout>
   );
