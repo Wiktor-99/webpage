@@ -4,7 +4,7 @@ services:
       context: .
       target: development
     ports:
-      - "3000:3000"
+      - "80:3000"
     volumes:
       - ./website/src/pages:/app/src/pages
       - ./website/docusaurus.config.js:/app/docusaurus.config.js
