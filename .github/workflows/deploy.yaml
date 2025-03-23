@@ -1,0 +1,41 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Setup known hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy to EC2
+      env:
+        EC2_HOST: ${{ secrets.EC2_HOST }}
+        EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+        DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      run: |
+        tar -czf deploy.tar.gz *
+        scp deploy.tar.gz $EC2_USERNAME@$EC2_HOST:/tmp/
+        ssh $EC2_USERNAME@$EC2_HOST << 'EOL'
+          mkdir -p ${{ secrets.DEPLOY_PATH }}
+          tar -xzf /tmp/deploy.tar.gz -C ${{ secrets.DEPLOY_PATH }}
+          cd ${{ secrets.DEPLOY_PATH }}
+          docker compose down || true
+          docker compose pull || true
+          docker compose up -d
+          rm /tmp/deploy.tar.gz
+        EOL
