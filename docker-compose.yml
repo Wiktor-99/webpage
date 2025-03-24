@@ -12,7 +12,9 @@ services:
 
   prod:
     build:
-      context: .
-      target: production
+      context: ./nginx
+      dockerfile: Dockerfile
     ports:
       - "80:80"
+    depends_on:
+      - dev
