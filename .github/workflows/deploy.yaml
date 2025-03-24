@@ -36,6 +36,6 @@ jobs:
           cd ${{ secrets.DEPLOY_PATH }}
           docker compose down || true
           docker compose pull || true
-          docker compose up -d
+          docker compose up prod -d
           rm /tmp/deploy.tar.gz
         EOL
