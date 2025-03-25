@@ -12,9 +12,9 @@ services:
 
   prod:
     build:
-      context: ./nginx
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: Dockerfile.nginx
     ports:
-      - "80:80"
+      - "8080:80"
     depends_on:
       - dev
