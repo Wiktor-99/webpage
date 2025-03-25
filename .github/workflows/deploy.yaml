@@ -35,7 +35,6 @@ jobs:
           tar -xzf /tmp/deploy.tar.gz -C ${{ secrets.DEPLOY_PATH }}
           cd ${{ secrets.DEPLOY_PATH }}
           docker compose down || true
-          docker compose pull || true
-          docker compose up prod -d
+          docker compose up prod --build -d
           rm /tmp/deploy.tar.gz
         EOL
