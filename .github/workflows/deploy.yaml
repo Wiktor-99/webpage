@@ -35,6 +35,7 @@ jobs:
           tar -xzf /tmp/deploy.tar.gz -C ${{ secrets.DEPLOY_PATH }}
           cd ${{ secrets.DEPLOY_PATH }}
           docker compose down || true
-          docker compose up prod --build -d
+          ./renew-cert.sh
+          docker compose up nginx --build -d
           rm /tmp/deploy.tar.gz
         EOL
