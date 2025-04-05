@@ -16,15 +16,7 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/html:/var/www/html
     depends_on:
       - dev
-
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    command: >
-      certonly --webroot --webroot-path=/var/www/certbot
-      -d wiktorbajor.com -d www.wiktorbajor.com
-      --agree-tos --register-unsafely-without-email
