@@ -32,9 +32,9 @@ jobs:
         scp deploy.tar.gz $EC2_USERNAME@$EC2_HOST:/tmp/
         ssh $EC2_USERNAME@$EC2_HOST << 'EOL'
           mkdir -p ${{ secrets.DEPLOY_PATH }}
-          tar -xzf /tmp/deploy.tar.gz -C ${{ secrets.DEPLOY_PATH }}
           cd ${{ secrets.DEPLOY_PATH }}
           docker compose down || true
+          tar -xzf /tmp/deploy.tar.gz -C ${{ secrets.DEPLOY_PATH }}
           docker compose up --build -d
           rm /tmp/deploy.tar.gz
         EOL
