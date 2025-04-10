@@ -31,10 +31,10 @@ jobs:
         tar -czf deploy.tar.gz *
         scp deploy.tar.gz $EC2_USERNAME@$EC2_HOST:/tmp/
         ssh $EC2_USERNAME@$EC2_HOST << 'EOL'
-          mkdir -p ${{ secrets.DEPLOY_PATH }}
-          cd ${{ secrets.DEPLOY_PATH }}
+          mkdir -p /home/$EC2_USERNAME/${{ secrets.DEPLOY_PATH }}
+          cd /home/$EC2_USERNAME/${{ secrets.DEPLOY_PATH }}
           docker compose down || true
-          tar -xzf /tmp/deploy.tar.gz -C ${{ secrets.DEPLOY_PATH }}
+          tar -xzf /tmp/deploy.tar.gz -C /home/$EC2_USERNAME/${{ secrets.DEPLOY_PATH }}
           docker compose up --build -d
           rm /tmp/deploy.tar.gz
         EOL
