@@ -35,6 +35,6 @@ jobs:
           cd /home/$EC2_USERNAME/$DEPLOY_PATH
           docker compose down || true
           tar -xzf /tmp/deploy.tar.gz -C /home/$EC2_USERNAME/$DEPLOY_PATH
-          docker compose up --build -d
+          docker compose up -d
           rm /tmp/deploy.tar.gz
         EOL
