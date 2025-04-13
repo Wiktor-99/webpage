@@ -12,15 +12,15 @@ module.exports = {
         title: 'Hello World',
         items: [
           {
-            to: 'docs/',
-            activeBasePath: 'docs',
-            label: 'Docs',
-            position: 'left',
-          },
-          {
             to: 'blog',
             label: 'Blog',
             position: 'left'
+          },
+          {
+            type: 'doc',
+            docId: 'intro',
+            position: 'left',
+            label: 'Documentation',
           },
         ],
       },

@@ -6,6 +6,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
+      - ./website/docs:/app/docs
       - ./website/blog:/app/blog
       - ./website/src/pages:/app/src/pages
       - ./website/docusaurus.config.js:/app/docusaurus.config.js
