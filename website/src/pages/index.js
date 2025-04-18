@@ -4,8 +4,8 @@ import Layout from '@theme/Layout';
 export default function Home() {
   return (
     <Layout
-      title="Hello World"
-      description="A basic Docusaurus site">
+      title=""
+      description="A personal website">
       <main style={{
         padding: '2rem',
         display: 'flex',

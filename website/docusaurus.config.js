@@ -1,15 +1,15 @@
 module.exports = {
-    title: 'Hello World',
-    tagline: 'A basic Docusaurus site',
-    url: 'https://your-domain.com',
+    title: 'Wiktor Bajor',
+    tagline: 'A personal website and blog',
+    url: 'https://wiktorbajor.com',
     baseUrl: '/',
     favicon: 'img/favicon.ico',
-    organizationName: 'your-username',
-    projectName: 'hello-world',
+    organizationName: 'Wiktor Bajor',
+    projectName: 'website',
 
     themeConfig: {
       navbar: {
-        title: 'Hello World',
+        title: 'Wiktor Bajor',
         items: [
           {
             to: 'blog',
@@ -26,7 +26,7 @@ module.exports = {
       },
       footer: {
         style: 'dark',
-        copyright: `Copyright © ${new Date().getFullYear()} Hello World App. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Wiktor Bajor. Built with Docusaurus.`,
       },
     },
     presets: [
