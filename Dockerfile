@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN npx create-docusaurus@latest temp-project classic --javascript --skip-install
 
-FROM node:lts AS development
+FROM node:lts-slim AS development
 
 WORKDIR /app
 
