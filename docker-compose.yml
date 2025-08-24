@@ -11,6 +11,15 @@ services:
       - ./website/src/pages:/app/src/pages
       - ./website/docusaurus.config.js:/app/docusaurus.config.js
     command: npm start -- --host 0.0.0.0
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   nginx:
     image: nginx:latest
     ports:
@@ -18,7 +27,60 @@ services:
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /var/www/html:/var/www/html
+      - certbot-etc:/etc/letsencrypt:ro
+      - web-root:/var/www/certbot
+    command:
+      - /bin/sh
+      - -c
+      - |
+        (prev=""; while :; do
+          cur=$(sha256sum /etc/letsencrypt/live/wiktorbajor.com/fullchain.pem /etc/letsencrypt/live/wiktorbajor.com/privkey.pem 2>/dev/null || true)
+          if [ "$cur" != "$prev" ] && [ -n "$cur" ]; then
+            if [ -n "$prev" ]; then nginx -s reload; fi
+            prev="$cur"
+          fi
+          sleep 300
+        done) & exec nginx -g 'daemon off;'
     depends_on:
       - dev
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - web-root:/var/www/certbot
+    depends_on:
+      - nginx
+    command:
+      - /bin/sh
+      - -c
+      - |
+        while :; do
+          certbot renew --webroot -w /var/www/certbot --quiet || true
+          now=$(date +%s)
+          midnight=$(date -d "tomorrow 00:00" +%s)
+          sleep_seconds=$((midnight - now))
+          if [ "$sleep_seconds" -lt 0 ]; then sleep_seconds=86400; fi
+          sleep "$sleep_seconds"
+        done
+    restart: unless-stopped
+    networks:
+      - app-network
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+
+networks:
+  app-network:
+    driver: bridge
