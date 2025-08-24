@@ -71,21 +71,10 @@ services:
     image: alpine:3.20
     volumes:
       - certbot-etc:/etc/letsencrypt
-    entrypoint: ["/bin/sh", "-c"]
-    command: |
-      CERT_DIR=/etc/letsencrypt/live/wiktorbajor.com
-      if [ ! -f "$CERT_DIR/fullchain.pem" ] || [ ! -f "$CERT_DIR/privkey.pem" ]; then
-        echo "Generating temporary self-signed certificate..."
-        mkdir -p "$CERT_DIR"
-        apk add --no-cache openssl >/dev/null 2>&1
-        openssl req -x509 -nodes -days 3 -newkey rsa:2048 \
-          -keyout "$CERT_DIR/privkey.pem" \
-          -out "$CERT_DIR/fullchain.pem" \
-          -subj "/CN=wiktorbajor.com"
-        echo "Temporary certificate created"
-      else
-        echo "Certificate files already exist, skipping initialization"
-      fi
+      - ./scripts/cert-init.sh:/usr/local/bin/cert-init.sh:ro
+    environment:
+      <<: *common-variables
+    entrypoint: ["/bin/sh", "/usr/local/bin/cert-init.sh"]
     restart: "no"
     networks:
       - app-network
