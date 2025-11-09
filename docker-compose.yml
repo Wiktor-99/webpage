@@ -5,7 +5,6 @@ x-common-variables: &common-variables
   EMAIL: ${EMAIL:-wiktorbajor1@gmail.com}
 
 services:
-  # Docusaurus development server
   dev:
     build:
       context: .
