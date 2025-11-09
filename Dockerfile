@@ -1,13 +1,19 @@
-FROM node:lts AS init
-
-WORKDIR /app
-
-RUN npx create-docusaurus@latest temp-project classic --javascript --skip-install
-
 FROM node:lts-slim AS development
 
 WORKDIR /app
 
-COPY --from=init /app/temp-project/ ./
+RUN npm install -g live-server
 
-RUN npm install
+COPY ./website /app
+
+EXPOSE 3000
+
+CMD ["live-server", "--port=3000", "--host=0.0.0.0", "--no-browser", "--wait=100"]
+
+FROM nginx:alpine AS production
+
+COPY ./website /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
