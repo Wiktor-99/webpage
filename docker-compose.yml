@@ -12,7 +12,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./website:/app:ro
+      - ./website:/app
     restart: unless-stopped
     networks:
       - app-network
@@ -21,6 +21,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 10s
 
   nginx:
     image: nginx:latest
